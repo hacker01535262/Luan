@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barbearia Nova Arte - Oficial</title>
+    <style>
+        /* Reset e Estilo Geral */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f4f4f4; color: #333; }
+
+        /* Cabeçalho */
+        header {
+            background-color: #232f3e;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo { font-size: 24px; font-weight: bold; color: #ff9900; }
+        nav a { color: white; text-decoration: none; margin-left: 20px; transition: 0.3s; cursor: pointer; }
+        nav a:hover { color: #ff9900; }
+
+        /* Banner */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://unsplash.com');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        /* Área de Login Oculta (Modal) */
+        #login-section {
+            display: none; /* Inicia escondido */
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+        .login-card input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; }
+        
+        /* Grade de Produtos */
+        .container { padding: 40px 5%; }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        .product-card {
+            background: white; padding: 20px; border-radius: 10px; text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .product-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; }
+        .price { color: #b12704; font-size: 22px; font-weight: bold; margin: 15px 0; }
+        
+        .buy-btn {
+            width: 100%; padding: 12px; background-color: #ff9900;
+            border: none; border-radius: 5px; font-weight: bold; cursor: pointer;
+        }
+
+        footer { background: #232f3e; color: white; text-align: center; padding: 20px; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+    <!-- TELA DE LOGIN (MODAL) -->
+    <div id="login-section">
+        <div class="login-card">
+            <h2 style="color:#232f3e">Login</h2>
+            <p>Acesse para comprar</p>
+            <input type="text" id="user" placeholder="Usuário (admin)">
+            <input type="password" id="pass" placeholder="Senha (123)">
+            <button class="buy-btn" onclick="fazerLogin()">Entrar</button>
+            <button onclick="fecharLogin()" style="background:none; border:none; margin-top:10px; cursor:pointer">Cancelar</button>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo">Barbearia Nova Arte</div>
+        <nav>
+            <a href="#">Início</a>
+            <a onclick="irParaLogin()" title="Login">👤 <span id="user-status">Entrar</span></a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Qualidade & Estilo</h1>
+        <p>O melhor para o seu visual</p>
+    </section>
+
+    <main class="container">
+        <div class="products-grid">
+            <div class="product-card">
+                <img src="https://unsplash.com" alt="Corte">
+                <h3>Corte Disfarçado</h3>
+                <p class="price">R$ 30,90</p>
+                <button class="buy-btn" onclick="verificarCompra()">Comprar agora</button>
+            </div>
+            <div class="product-card">
+                <img src="https://unsplash.com" alt="Combo">
+                <h3>Combo Completo</h3>
+                <p class="price">R$ 100,00</p>
+                <button class="buy-btn" onclick="verificarCompra()">Comprar agora</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>&copy; 2023 Barbearia Nova Arte</footer>
+
+    <script>
+        // Função para abrir o login
+        function irParaLogin() {
+            document.getElementById('login-section').style.display = 'flex';
+        }
+
+        function fecharLogin() {
+            document.getElementById('login-section').style.display = 'none';
+        }
+
+        // Simulação de Login
+        function fazerLogin() {
+            const u = document.getElementById('user').value;
+            const s = document.getElementById('pass').value;
+
+            if(u === 'admin' && s === '123') {
+                localStorage.setItem('logado', 'true');
+                alert('Login realizado com sucesso!');
+                fecharLogin();
+                document.getElementById('user-status').innerText = "Olá, Admin";
+            } else {
+                alert('Usuário ou senha incorretos!');
+            }
+        }
+
+        // Função de Compra com Verificação
+        function verificarCompra() {
+            const estaLogado = localStorage.getItem('logado');
+
+            if (estaLogado === 'true') {
+                alert('Redirecionando para o Pagamento...');
+                window.location.href = "https://mercadopago.com.br"; // Exemplo de saída
+            } else {
+                alert('Você precisa estar logado para comprar!');
+                irParaLogin();
+            }
+        }
+
+        // Verifica se já estava logado ao carregar a página
+        window.onload = function() {
+            if(localStorage.getItem('logado') === 'true') {
+                document.getElementById('user-status').innerText = "Olá, Admin";
+            }
+        }
+    </script>
+</body>
+</html>
+ async function fazerCadastro() {
+    const user = document.getElementById('user').value;
+    const pass = document.getElementById('pass').value;
+
+    const response = await fetch('/cadastrar_api', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({user: user, senha: pass})
+    });
+    const result = await response.json();
+    alert(result.message);
+}
